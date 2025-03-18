@@ -11,6 +11,7 @@ import (
 // InitRouter 初始化所有路由
 func InitRouter() *gin.Engine {
 	r := gin.Default()
+	r.Static("/static", "C:/project/Images")
 	// 跨域  middleware.AuthMiddleware()
 	r.Use(gin.Logger(), gin.Recovery(), middleware.CORS())
 	// 注册 login 相关的路由

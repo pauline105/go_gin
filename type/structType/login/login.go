@@ -13,11 +13,3 @@ type User struct {
 	Password  string `db:"password"`
 	ProfileID int    `db:"profile_id"`
 }
-
-// UserProfile 定義 users_profile 表的結構
-type UserProfile struct {
-	ID    int    `db:"id" json:"id"`
-	Name  string `db:"name" json:"name"`
-	Email string `db:"email" json:"email"`
-	Phone string `db:"phone" json:"phone"`
-}

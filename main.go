@@ -17,7 +17,6 @@ func main() {
 		if err != nil {
 		}
 	}(sqlxDB)
-
 	// 注册路由
 	r := routers.InitRouter()
 

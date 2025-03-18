@@ -1,7 +1,6 @@
 package login
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 	"go_web/db"
@@ -25,7 +24,6 @@ func LoginHandle(c *gin.Context) {
 		})
 		return
 	}
-	fmt.Printf("Username: %s, Password: %s\n", loginData.Username, loginData.Password)
 
 	// 獲取到用戶的哈希密碼
 	storedHash, storedHashErr := db.GetPasswordHashByUsername(sqlxDB, loginData.Username)
@@ -53,21 +51,9 @@ func LoginHandle(c *gin.Context) {
 	err := sqlxDB.Get(&user, sqlStr, loginData.Username, storedHash)
 
 	if err != nil {
-		fmt.Println("query failed,err:", err)
 		return
 	}
 
-	// 使用 用戶表(profile_id) 查詢 用戶資料表(user_profile) 表中的數據
-	profile := new(login.UserProfile)
-	sqlProfile := "SELECT id, name, email, phone FROM profile WHERE id = ?"
-	err = sqlxDB.Get(profile, sqlProfile, user.ProfileID)
-	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{
-			"status":  "401",
-			"message": "用戶資料不存在",
-		})
-		return
-	}
 	data := jwt_plugin.Data{
 		Username: loginData.Username,
 		Password: loginData.Password,
@@ -84,9 +70,8 @@ func LoginHandle(c *gin.Context) {
 	sign, err := jwt_plugin.Sign(data)
 
 	c.JSON(http.StatusOK, gin.H{
-		"token":    "Bearer " + sign,
-		"message":  "ok",
-		"status":   200,
-		"userInfo": profile,
+		"token":   "Bearer " + sign,
+		"message": "登錄成功",
+		"status":  200,
 	})
 }
