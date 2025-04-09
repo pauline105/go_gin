@@ -17,6 +17,6 @@ func InitRouter() *gin.Engine {
 	// 注册 login 相关的路由
 	login.RegisterLoginRouter(r)
 	register.RegisterUserRouter(r)
-	user.RegisterUserInfoRouter(r)
+	user.RegisterUserRoutes(r)
 	return r
 }

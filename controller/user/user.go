@@ -71,3 +71,49 @@ func GetUserInfoHandler(c *gin.Context) {
 		"menu":     menu,
 	})
 }
+
+// GetUserInfoHandle 獲取部門信息
+func GetUserInfoHandle(c *gin.Context) {
+	sqlxDB := db.ConnectDB()
+	var nodes []*user.Node
+	err := sqlxDB.Select(&nodes, "SELECT  id, `key`, title, parent_id FROM org_list")
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	buildTree := func(nodes []*user.Node) []*user.Node {
+		// 创建一个映射，存储节点 ID -> 节点 的映射
+		nodeMap := make(map[int64]*user.Node)
+		var rootNodes []*user.Node
+
+		// 将所有节点按 ID 存入 nodeMap，并初始化每个节点的 children 为一个空数组
+		for _, node := range nodes {
+			nodeMap[int64(node.ID)] = node
+			// 初始化 Children 字段，即使没有子节点
+			if node.Children == nil {
+				node.Children = []*user.Node{}
+			}
+		}
+
+		// 组装树形结构
+		for _, node := range nodes {
+			if node.ParentID == nil {
+				// 如果 ParentID 为 nil，说明是根节点
+				rootNodes = append(rootNodes, node)
+			} else {
+				// 否则，将该节点加入到父节点的 children 列表中
+				parentNode, exists := nodeMap[int64(*node.ParentID)]
+				if exists {
+					parentNode.Children = append(parentNode.Children, node)
+				}
+			}
+		}
+		return rootNodes
+	}
+	tree := buildTree(nodes)
+	c.JSON(200, gin.H{
+		"code":     200,
+		"msg":      "success",
+		"org_list": tree,
+	})
+}
