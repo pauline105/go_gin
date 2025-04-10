@@ -40,8 +40,8 @@ func RegisterUserHandler(c *gin.Context) {
 		return
 	}
 	// 先給資料表添加數據獲取到id
-	addUserProfile := "INSERT INTO profile (name) VALUES (?)"
-	res, err := sqlxDB.Exec(addUserProfile, "")
+	addUserProfile := "INSERT INTO profile (name,status) VALUES (?,?)"
+	res, err := sqlxDB.Exec(addUserProfile, "", 1)
 	if err != nil {
 		log.Fatalln(err)
 		return
@@ -51,7 +51,7 @@ func RegisterUserHandler(c *gin.Context) {
 	// 給密碼hash加密
 	hashedPassword, err := db.HashPassword(RegisterUserData.Password)
 	// 用戶存入user表
-	query := "INSERT INTO user (username,	password,profile_id) VALUES (?,?,?)"
+	query := "INSERT INTO user (username,password,profile_id) VALUES (?,?,?)"
 	_, err = sqlxDB.Exec(query, RegisterUserData.Username, hashedPassword, profileId)
 	if err != nil {
 		log.Fatalf("Error inserting user: %v", err)
