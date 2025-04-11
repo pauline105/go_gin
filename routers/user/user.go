@@ -8,6 +8,7 @@ import (
 func RegisterUserRoutes(r *gin.Engine) {
 	RegisterUserInfoRouter(r)
 	RegisterOrgListRouter(r)
+	RegisterTableDataRouter(r)
 }
 
 func RegisterUserInfoRouter(r *gin.Engine) {
@@ -15,5 +16,9 @@ func RegisterUserInfoRouter(r *gin.Engine) {
 }
 
 func RegisterOrgListRouter(r *gin.Engine) {
-	r.GET("/orgList", user.GetUserInfoHandle)
+	r.GET("/orgList", user.GetUserOrgListHandle)
+}
+
+func RegisterTableDataRouter(r *gin.Engine) {
+	r.GET("/userDataList", user.GetTableDataForOrgHandler)
 }

@@ -23,7 +23,6 @@ func RegisterUserHandler(c *gin.Context) {
 		})
 		return
 	}
-	fmt.Println(RegisterUserData)
 	// 資料庫查找是否有相同的用戶名
 	var count int
 	sqlString := "SELECT COUNT(*) FROM user WHERE username = ?"
@@ -57,7 +56,6 @@ func RegisterUserHandler(c *gin.Context) {
 		log.Fatalf("Error inserting user: %v", err)
 		return
 	}
-	fmt.Printf("Parsed Data: %+v\n", RegisterUserData)
 	c.JSON(200, gin.H{
 		"status":  200,
 		"message": "用戶註冊成功",

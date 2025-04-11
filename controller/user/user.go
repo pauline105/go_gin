@@ -60,9 +60,6 @@ func GetUserInfoHandler(c *gin.Context) {
 		return
 	}
 
-	// 打印解析後的數據
-	fmt.Println(menu) // 這裡會正常顯示 JSON 數據
-
 	// 返回用戶的信息
 	c.JSON(200, gin.H{
 		"code":     200,
@@ -72,8 +69,8 @@ func GetUserInfoHandler(c *gin.Context) {
 	})
 }
 
-// GetUserInfoHandle 獲取部門信息
-func GetUserInfoHandle(c *gin.Context) {
+// GetUserOrgListHandle 獲取部門信息
+func GetUserOrgListHandle(c *gin.Context) {
 	sqlxDB := db.ConnectDB()
 	var nodes []*user.Node
 	err := sqlxDB.Select(&nodes, "SELECT  id, `key`, title, parent_id FROM org_list")
@@ -116,4 +113,16 @@ func GetUserInfoHandle(c *gin.Context) {
 		"msg":      "success",
 		"org_list": tree,
 	})
+}
+
+// 透過部門查找員工信息
+func GetTableDataForOrgHandler(c *gin.Context) {
+	sqlxDB := db.ConnectDB()
+	var tableData []user.UserInfoStruct
+	query := "SELECT p.email, p.name, p.phone, p.role, p.status, p.org FROM profile p JOIN user u ON u.id = p.id WHERE p.org = ?"
+	err := sqlxDB.Select(&tableData, query, "中臺")
+	if err != nil {
+		log.Fatalln(err)
+	}
+	fmt.Printf("%v\n", tableData)
 }
