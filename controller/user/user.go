@@ -119,10 +119,15 @@ func GetUserOrgListHandle(c *gin.Context) {
 func GetTableDataForOrgHandler(c *gin.Context) {
 	sqlxDB := db.ConnectDB()
 	var tableData []user.UserInfoStruct
-	query := "SELECT p.email, p.name, p.phone, p.role, p.status, p.org FROM profile p JOIN user u ON u.id = p.id WHERE p.org = ?"
+	query := "SELECT p.id, p.email, p.name, p.phone, p.role, p.status, p.org, u.username FROM profile p JOIN user u ON u.id = p.id WHERE p.org = ?"
 	err := sqlxDB.Select(&tableData, query, "中臺")
 	if err != nil {
 		log.Fatalln(err)
 	}
 	fmt.Printf("%v\n", tableData)
+	c.JSON(200, gin.H{
+		"code":     200,
+		"msg":      "success",
+		"org_list": tableData,
+	})
 }

@@ -1,7 +1,6 @@
 package register
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"go_web/db"
 	"log"
