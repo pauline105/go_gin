@@ -11,6 +11,8 @@ type UserInfoStruct struct {
 	Status   bool   `db:"status" json:"status"`
 	Org      string `db:"org" json:"org"`
 	UserName string `db:"username" json:"username"`
+	Position string `db:"position" json:"position"`
+	Gender   string `db:"gender" json:"gender"`
 }
 
 // 部門數據結構

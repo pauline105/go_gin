@@ -118,9 +118,12 @@ func GetUserOrgListHandle(c *gin.Context) {
 // 透過部門查找員工信息
 func GetTableDataForOrgHandler(c *gin.Context) {
 	sqlxDB := db.ConnectDB()
+	keyword := c.DefaultQuery("keyword", "")
+
+	fmt.Println("Received keyword:", keyword)
 	var tableData []user.UserInfoStruct
-	query := "SELECT p.id, p.email, p.name, p.phone, p.role, p.status, p.org, u.username FROM profile p JOIN user u ON u.id = p.id WHERE p.org = ?"
-	err := sqlxDB.Select(&tableData, query, "中臺")
+	query := "SELECT p.id, p.email, p.name, p.phone, p.role, p.status, p.org, u.username,p.position,p.gender FROM profile p JOIN user u ON u.id = p.id WHERE p.org = ?"
+	err := sqlxDB.Select(&tableData, query, keyword)
 	if err != nil {
 		log.Fatalln(err)
 	}
