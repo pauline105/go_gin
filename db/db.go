@@ -24,10 +24,10 @@ func ConnectDB() *sqlx.DB {
 	}
 
 	// 設置每個連接的最大生命周期
-	DB.SetConnMaxLifetime(time.Second * 10)
+	DB.SetConnMaxLifetime(time.Minute * 5)
 
 	// 數據庫最大連接數
-	DB.SetMaxOpenConns(200)
+	DB.SetMaxOpenConns(100)
 
 	// 數據庫最大空閑連接數
 	DB.SetMaxIdleConns(10)
